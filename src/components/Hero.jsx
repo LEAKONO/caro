@@ -1,4 +1,4 @@
-// components/HeroWithFramer.jsx - Adjusted image size
+// components/HeroWithFramer.jsx - Fixed download only (no scrollbar changes)
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -32,6 +32,9 @@ const HeroWithFramer = () => {
     }
   ];
 
+  // Google Drive direct download link
+  const resumeDriveLink = "https://drive.google.com/uc?export=download&id=1k0_J6yqQ8lau4Se-igssaW0PNWfrkHLq";
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -39,12 +42,22 @@ const HeroWithFramer = () => {
     return () => clearInterval(interval);
   }, [images.length]);
 
+  const handleDownloadCV = () => {
+    // Force download by creating an anchor element
+    const link = document.createElement('a');
+    link.href = resumeDriveLink;
+    link.setAttribute('download', 'Caroline_Kathure_Murianki_Resume.pdf');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="bg-gradient-to-r from-blue-600 to-purple-700 text-white relative overflow-hidden w-full min-h-screen flex items-center pt-16 md:pt-0">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16 lg:py-20">
         <div className="flex flex-col lg:flex-row gap-10 sm:gap-12 lg:gap-14 xl:gap-16 items-start justify-center">
           
-          {/* Text Content - Left on desktop, below image on mobile */}
+          {/* Text Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -79,24 +92,30 @@ const HeroWithFramer = () => {
                 transition={{ delay: 0.4 }}
                 className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start"
               >
-                <button className="bg-white text-blue-600 px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 shadow-lg w-full sm:w-auto">
+                <button 
+                  onClick={() => window.location.href = 'mailto:ckathu@gmail.com'}
+                  className="bg-white text-blue-600 px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 shadow-lg w-full sm:w-auto"
+                >
                   ✉️ Contact Me
                 </button>
-                <button className="border-2 border-white text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:bg-white/10 backdrop-blur-sm transition-all duration-300 w-full sm:w-auto">
-                  📄 Download CV
+                <button 
+                  onClick={handleDownloadCV}
+                  className="border-2 border-white text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg hover:bg-white/10 backdrop-blur-sm transition-all duration-300 w-full sm:w-auto"
+                >
+                  📄 Download Resume
                 </button>
               </motion.div>
             </div>
           </motion.div>
 
-          {/* Image Section - Right on desktop, top on mobile */}
+          {/* Image Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="w-full lg:w-1/2 order-1 lg:order-2 flex flex-col items-center pt-8 lg:pt-0" /* Removed extra padding */
+            className="w-full lg:w-1/2 order-1 lg:order-2 flex flex-col items-center pt-8 lg:pt-0"
           >
-            {/* Main Image Container - REDUCED SIZE */}
+            {/* Main Image Container */}
             <div className="relative w-full max-w-xs xs:max-w-sm sm:max-w-md mx-auto lg:max-w-lg xl:max-w-xl">
               <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] xl:max-w-[440px] mx-auto">
                 <AnimatePresence mode="wait">
@@ -108,9 +127,7 @@ const HeroWithFramer = () => {
                     transition={{ duration: 0.8 }}
                     className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl"
                   >
-                    {/* ACTUAL IMAGE WITH FALLBACK */}
                     <div className="relative w-full h-full">
-                      {/* Actual Image */}
                       <img
                         src={images[currentImageIndex].url}
                         alt={images[currentImageIndex].title}
@@ -121,7 +138,6 @@ const HeroWithFramer = () => {
                         }}
                       />
                       
-                      {/* Fallback gradient background - shown if image fails to load */}
                       <div 
                         className={`absolute inset-0 bg-gradient-to-br ${images[currentImageIndex].color} flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center ${images[currentImageIndex].url ? 'hidden' : ''}`}
                       >
@@ -131,7 +147,6 @@ const HeroWithFramer = () => {
                           transition={{ delay: 0.3, type: "spring" }}
                           className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6"
                         >
-                          {/* Emoji based on image index */}
                           {currentImageIndex === 0 && "💼"}
                           {currentImageIndex === 1 && "🎤"}
                           {currentImageIndex === 2 && "🤝"}
@@ -158,7 +173,6 @@ const HeroWithFramer = () => {
                   </motion.div>
                 </AnimatePresence>
 
-                {/* Decorative frame - REDUCED SIZE */}
                 <div className="absolute -inset-2 sm:-inset-3 md:-inset-4 border-2 border-white/30 rounded-2xl sm:rounded-3xl -z-10"></div>
               </div>
 
@@ -174,7 +188,7 @@ const HeroWithFramer = () => {
                 </span>
               </motion.div>
 
-              {/* Image Navigation - Just Dots */}
+              {/* Image Navigation */}
               <div className="flex justify-center mt-4 sm:mt-6">
                 <div className="flex gap-3">
                   {images.map((_, index) => (
@@ -204,7 +218,6 @@ const HeroWithFramer = () => {
             </div>
           </motion.div>
         </div>
-
       </div>
     </div>
   );
